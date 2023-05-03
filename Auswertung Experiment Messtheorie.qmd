@@ -1,0 +1,57 @@
+---
+title: "Auswertung Experiment Messtheorie"
+format: html
+editor: visual
+---
+
+## Download der Daten
+
+```{r}
+source("https://soscisurvey.ph-karlsruhe.de/Mathematikarbeiten/?act=e1g9LMzN1JsM9XzCKPrEzeYQ&rScript")  
+
+ds <- ds |> 
+  filter(lubridate::ymd_hms(STARTED) > lubridate::ymd_hms("2023-05-03 12:00:00")) |> 
+  mutate(`Qualität der 1. Arbeit` = ifelse(DU01 == 1, "Sehr gute/nArbeit", "Sehr schwache Arbeit"),
+         `Bewertung 1. Arbeit` = DU02_01,
+         `Bewertung 2. Arbeit` = DU06_01) 
+```
+
+## Wie viele haben mitgemacht?
+
+```{r}
+nrow(ds)
+```
+
+## Design der Studie:
+
+| Gruppe 1             | Gruppe 2             |
+|----------------------|----------------------|
+| Sehr gute Arbeit     | Eher schwache Arbeit |
+| Mittel starke Arbeit | Mittel starke Arbeit |
+| Soziodemographie     | Soziodemographie     |
+
+## Ergebnisse: Bewertung der ersten Arbeit
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(hrbrthemes)
+
+ds|> 
+  select(`Qualität der 1. Arbeit`, `Bewertung 1. Arbeit`, `Bewertung 2. Arbeit`) |> 
+  ggplot(aes(`Qualität der 1. Arbeit`, `Bewertung 1. Arbeit`)) +
+    geom_jitter() + 
+    theme_modern_rc() +
+    ggtitle("Beurteilerübereinstinnung")
+```
+
+## Ergebnisse: Kontrasteffekt?
+
+```{r}
+ds|> 
+  ggplot(aes(`Qualität der 1. Arbeit`, `Bewertung 2. Arbeit`)) +
+    geom_jitter() + 
+    theme_modern_rc() +
+    ggtitle("Konstrasteffekt?")
+```

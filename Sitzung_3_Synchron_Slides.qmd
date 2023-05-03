@@ -1,0 +1,202 @@
+---
+title: "Vorlesung"
+subtitle: "Einführung in qualitative und quantitative Forschungsmethoden"
+author: "Samuel Merk"
+format: 
+  revealjs:
+    auto-stretch: false
+    self-contained: true
+    title-slide-attributes:
+      data-background-image: img/sash.svg
+      data-background-size: 30%
+      data-background-position: 0 0
+    slide-number: false
+    preview-links: false
+    pdf-separate-fragments: true
+    controls: true
+    logo: img/PHlogo.svg
+    theme: [simple, css/custom.scss]
+    fullscreen: true
+    pdfexport: true
+bibliography: references.bib
+csl: apa.csl
+---
+## Heutige Sitzung {.smaller}
+<br>
+[{{< fa brain >}}]{.imp} Aktivierung Ihres Vorwissens
+
+[{{< fa circle-question >}}]{.imp} Ihre Fragen
+
+[{{< fa laptop >}}]{.imp} Experiment: Messtheorie (Master Thesis Sonja Hahn)
+
+[{{< fa brain >}}]{.imp} Elaboration Messtheorie anhand Ergebnisse des Experiments
+
+[{{< fa down-long >}}]{.imp} Vertiefung: Beurteilerübereinstimmung bei der Notengebung  
+
+[{{< fa book-open >}} Birkel [-@birkel2005]]{style="padding-left:80px; font-size:.8em;"}  
+
+[{{< fa repeat >}}]{.imp} Alltagsmythen vs. interne Validität  
+
+```{r hidden chunk which creates template stuff}
+#| echo: false
+
+## in terminal ########
+# quarto install extension quarto-ext/fontawesome
+# quarto install extension schochastics/academicons
+#
+
+########################
+library(fontawesome)
+library(tidyverse)
+
+# Change css to lecker PH green
+if(!dir.exists("img"))
+dir.create("img")
+if(!dir.exists("css"))
+dir.create("css")
+fileConn<-file("css/custom.scss")
+writeLines(c("/*-- scss:defaults --*/",
+             "$link-color: #8cd000 !default;"), fileConn)
+close(fileConn)
+
+# create sash with URL
+sash <- 
+  ggplot() + 
+  geom_polygon(data = tibble(x = c(0,4,5.5,0),
+                             y = c(1,5,5,-.5)),
+               aes(x,y), fill = "#8cd000") + 
+  coord_fixed() +
+  annotate(geom = "text", 
+           label = " ", 
+           x = .8, y = .8, 
+           angle = 45,
+           hjust = 0, vjust = 0,
+           size = 10,
+           color = "white") +
+ theme_void() + 
+ theme(plot.margin = margin(-2,0,0,-12, unit = "cm"))
+ggsave("img/sash.svg", sash)
+```
+
+```{css}
+.callout-title {background-color: #8cd000 !important;}
+
+.imp {
+  color: #8cd000;
+}
+
+.em08{
+  font-size: .8em;
+}
+.em07{
+  font-size: .7em;
+}
+
+.em15{
+  font-size: 1.5em;
+}
+
+
+figure>figcaption {
+    margin-top: 0.5em;
+    text-align: center;
+}
+
+.citation {
+  font-size: .8em;
+  color: #8cd000;
+}
+
+
+.timevis.html-widget .vis-background .vis-minor.vis-odd {
+  background: #8CD00030;
+  }
+  
+.vis-text {
+  color: #ffffff !important;
+  }
+  
+.vis-timeline {
+  border: transparent;
+  }
+  
+.vis-item {
+  border-color: #8CD000; 
+  background-color: #8CD000; 
+  color: #ffffff !important;
+}
+
+
+
+.vis-current-time {
+  background-color: #8CD00000;
+}
+  
+```
+
+
+
+## {{< fa brain >}} Aktivierung Ihres Vorwissens! {.center}
+
+Bearbeiten Sie die Lernkarten zur Messtheorie auf moodle.
+
+
+## Ihre Fragen zu den Begriffen aus den Lernkarten {.smaller}
+
+Bitte stellen Sie unter [https://bit.ly/merk006 {{< fa square-up-right >}}](https://bit.ly/merk006) Ihre Fragen zu den Begriffen aus den Lernkarten. Klicken Sie dazu auf »Q & A«.<br><br>
+```{r, out.width="70%", fig.align='center', echo = F, message = F}
+library(qrencoder)
+par(mar=c(0,0,0,0))
+image(qrencode_raster("https://bit.ly/merk006"), 
+      asp=1, col=c("#00000000", "#62DC3A"), axes=FALSE, 
+      xlab="", ylab="", bg = 'transparent')
+```
+
+
+
+## {{< fa laptop >}} Experiment: (Master Thesis) {.smaller .center}
+<br>
+
+Bitte bearbeiten Sie das Experiment zur Messtheorie Ihrer Kommilitonin unter [https://bit.ly/merk096 {{< fa square-up-right >}}](https://bit.ly/merk096)
+
+
+## {{< fa down-long >}} Vertiefung: Beurteilerübereinstimmung bei der Notengebung  
+::: {style="font-size: .7em; line-height: .7em;"}
+**Abstract von Birkel [-@birkel2005]**: 131 Lehrer(innen) beurteilten vier Mathematikarbeiten von Viertklässlem. Alle Lehrer verwendeten Punktesystem zur Auswertung. Der relative Anteil der erteilten Punkte konnte bei derselben Arbeit um bis zu 43 Prozentpunkte schwanken. Die abgegebenen Beurteilungen für dieselbe Arbeit differierten um bis zu 2.75 Notenstufen. Damit erscheint die Beurteilung von Mathematikarbeiten als nicht viel reliabler als die Aufsatzbeurteilung. Eine der verwendeten Arbeiten war im Original besonders unsauber in der Ausführung. Von dieser wurde eine "geschönte" Version erstellt und etwa der Hälfte der Beurteiler anstelle der Originalarbeit zur Beurteilung vorgelegt. Bei dieser Arbeit zeigte sich, dass die Auswertung der Arbeit von der Akkuratesse ihrer Ausführung nicht abhängig war, wohl aber die Beurteilung. Die von den Lehrern verwendeten Punktesysteme bei der Auswertung streuten zwischen 16.5 und 55 Punkten. Es zeigte sich, dass die Lehrer mit höchsten maximalen Punktsystemen den Schülern auch mehr Punkte gaben und entsprechend auch bessere Noten (voständigen Artikel <a href="img/Birkel.pdf">hier herunterladen</a>).
+:::
+
+## Alltagsmythen vs. intern valide Aussagen (Inferenzen)
+Effekte und Verzerrungen die Alltagsmythen entstehen lassen buw. die interne Validität von Aussagen senken sind u.a.
+
+::: {.incremental}
+* Positive Testing [@klayman1987]
+* Regression zur Mitte [@barnett2005]
+* Erwartungseffekte [@rosenthal1963]
+:::
+
+
+
+
+## Auslosung {.smaller}
+```{r}
+#| echo: true
+#| eval: false
+
+library(tidyverse)
+set.seed(2505)
+source("https://soscisurvey.ph-karlsruhe.de/Mathematikarbeiten/?act=e1g9LMzN1JsM9XzCKPrEzeYQ&rScript")  
+
+ds |> 
+  filter(lubridate::ymd_hms(STARTED) > lubridate::ymd_hms("2023-05-03 10:00:00") &
+           FINISHED == 1 &
+           SC01 == "Ja, ich habe den Datenschutz gelesen und bin damit einverstanden.") |> 
+  sample_n(1) |> 
+  mutate(`Gewinnercodes (ohne die letzten drei Stellen)` = substr(ZG03_01, 1, 9)) |> 
+  dplyr::select(`Gewinnercodes (ohne die letzten drei Stellen)`)
+```
+
+
+## Literatur
+<style>
+div.callout {border-left-color: #8cd000 !important;
+</style>
