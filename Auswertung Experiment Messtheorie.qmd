@@ -1,17 +1,20 @@
 ---
-title: "Auswertung Experiment Messtheorie"
+title: "Auswertung Experiment Messtheorie: Anti-Konstrasteffekt Intervention"
 format: html
 editor: visual
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Download der Daten
 
 ```{r}
+library(tidyverse)
 source("https://soscisurvey.ph-karlsruhe.de/Mathematikarbeiten/?act=e1g9LMzN1JsM9XzCKPrEzeYQ&rScript")  
 
 ds <- ds |> 
-  filter(lubridate::ymd_hms(STARTED) > lubridate::ymd_hms("2023-05-03 12:00:00")) |> 
-  mutate(`Qualität der 1. Arbeit` = ifelse(DU01 == 1, "Sehr gute/nArbeit", "Sehr schwache Arbeit"),
+  filter(lubridate::ymd_hms(STARTED) > lubridate::ymd_hms("2023-05-03 16:00:00")) |> 
+  mutate(`Qualität der 1. Arbeit` = ifelse(DU01 == 1, "Sehr gute Arbeit", "Sehr schwache Arbeit"),
          `Bewertung 1. Arbeit` = DU02_01,
          `Bewertung 2. Arbeit` = DU06_01) 
 ```
@@ -37,11 +40,12 @@ nrow(ds)
 #| warning: false
 library(tidyverse)
 library(hrbrthemes)
+library(ggforce)
 
 ds|> 
   select(`Qualität der 1. Arbeit`, `Bewertung 1. Arbeit`, `Bewertung 2. Arbeit`) |> 
   ggplot(aes(`Qualität der 1. Arbeit`, `Bewertung 1. Arbeit`)) +
-    geom_jitter() + 
+    geom_sina() + 
     theme_modern_rc() +
     ggtitle("Beurteilerübereinstinnung")
 ```
@@ -51,7 +55,45 @@ ds|>
 ```{r}
 ds|> 
   ggplot(aes(`Qualität der 1. Arbeit`, `Bewertung 2. Arbeit`)) +
-    geom_jitter() + 
+    geom_boxplot(width = .2, alpha = .2, color = "#ffffff80") + 
+    geom_sina() + 
     theme_modern_rc() +
-    ggtitle("Konstrasteffekt?")
+    ggtitle("Konstrasteffekt?")   
+```
+
+## Modelling Constrast Effect
+
+```{r}
+library(brms)
+
+ggplot(ds, aes(`Bewertung 2. Arbeit`, 
+               color = `Qualität der 1. Arbeit`, 
+               group = `Qualität der 1. Arbeit`)) +
+  geom_density(alpha = .3) +
+  theme_modern_rc()
+
+ggplot(ds, aes(y = `Bewertung 2. Arbeit`, 
+               x = `Qualität der 1. Arbeit`, 
+               color = `Qualität der 1. Arbeit`)) +
+  geom_violin(alpha = .1) +
+  geom_boxplot(width = .2, fill = "#ffffff30") +
+  ggforce::geom_sina() +
+  theme_modern_rc() +
+  scale_color_manual(values = c("#8cd000", "#d77d00"))
+
+mod0 <- 
+  brm(DU06_01 ~ 1,
+    data = ds,
+    family = gaussian)
+
+pp_check(mod0)
+
+mod1 <- 
+  brm(scale(DU06_01) ~ DU01,
+    data = ds,
+    family = gaussian)
+
+pp_check(mod1)
+
+sjPlot::tab_model(mod0, mod1)
 ```
